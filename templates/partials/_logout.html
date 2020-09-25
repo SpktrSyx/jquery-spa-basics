@@ -1,3 +1,20 @@
-<form action="/logout.php" method="POST">
-    <input type="submit"  name="logout" value="Deconnexion">
+<form id="logout-form"action="/logout.php" method="POST">
+    <input type="submit" class="btn btn-danger" name="logout" value="Deconnexion">
 </form>
+
+<script>
+    $('#logout-form').submit(function(event) {
+        event.preventDefault();
+
+        $.post($(this).attr('action'), [{name: 'logout'}])
+        .then(function(response) {
+            response = JSON.parse(response);
+            if(response.success) {
+                $('nav .logout').html('');
+                MON_SUPER_SITE.security = false;
+                
+                $('body').trigger('SECURITY_LOGOUT');
+            }
+        })
+    })
+</script>

@@ -4,6 +4,7 @@
  -->
 
 <form action="profile.php" method="POST" id="profile-form">
+    <p class="message"></p>
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" name="name" id="name">
@@ -24,3 +25,34 @@
         <input type="submit" class="btn btn-primary">
     </div>
 </form>
+
+
+<script>
+    Object.keys(MON_SUPER_SITE.security).forEach(function(prop){
+        let newProp = prop;
+
+        if(prop === 'firstName') newProp = 'first-name';
+        $('#' + newProp).val(MON_SUPER_SITE.security[prop]);
+    })
+
+    $('#profile-form').submit(function(event){
+        event.preventDefault();
+
+        let data = $(this).serializeArray();
+
+        data.map(function(field){
+            if (field.name === 'first-name'){
+                field.name = 'firstName';
+            }
+        });
+
+        $.post($(this).attr('action'), data)
+            .then(function(response){
+                if(!response.error){
+                    $('p.message', 'form').text('Saved');
+                    MON_SUPER_SITE.security = data;
+                }
+            })
+        
+    })
+</script>
